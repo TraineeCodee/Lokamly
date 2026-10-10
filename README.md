@@ -6,101 +6,84 @@ An interactive 3D Earth Globe Quiz web application built with **React (Vite)**, 
 
 ## 🎮 Game Concept & Rules
 
-1. **Question & Flag Clue**: The app automatically fetches a random country trivia question (e.g. *"Which country is home to the ancient rock-cut city of Petra?"*) and displays the target country's flag as a visual clue.
-2. **Interactive 3D Globe**: Players rotate, zoom, and explore the Earth in 3D.
-3. **Click to Guess**: Players click on the country they believe is the answer.
-4. **Instant Feedback**:
-   - **Correct Guess 🎉**: The country highlights in glowing emerald green, the camera zooms in smoothly to center on the nation, points (+10 pts + streak bonus) and streak are awarded, a fun fact is revealed, and the "Next Question" button unlocks.
-   - **Incorrect Guess ❌**: The clicked country highlights in warning red with an instant message: *"Wrong! You selected [Country]. Try again!"*, resetting the streak and allowing the player to retry.
+1. **Question & Flag Clue**: The app presents a random country trivia question and lets you optionally reveal the target country's flag as a clue.
+2. **Dynamic Scoring**:
+   - **No Clue**: Solved without opening the flag clue awards **10 Points** (`+10 Points! 🌟`).
+   - **Hint Used**: Peeking at the flag clue awards **5 Marks** (`+5 Marks`).
+3. **Non-Repeating Questions**: A massive curated bank of 40 sovereign countries. Questions never repeat during your session until all 40 countries have been visited!
+4. **Interactive 3D Globe**: Players rotate, zoom, and explore the Earth in 3D.
+5. **Instant Feedback**:
+   - **Correct Guess 🎉**: Glowing emerald green country highlight, smooth camera zoom to target, points awarded, and fun fact revealed.
+   - **Incorrect Guess ❌**: Warning red highlight with encouragement: *"Ooh, so close! That was [Country]. Try again!"*.
 
 ---
 
-## 📁 Project Structure
+## 🌐 Deploy to Public Web (Free)
 
-```
-Lokamly/
-├── backend/
-│   ├── package.json              # Express & CORS dependencies
-│   └── server.js                 # API server on port 5000 with /api/quiz/random endpoint
-├── frontend/
-│   ├── package.json              # React 18, Vite, Tailwind CSS, react-globe.gl, three
-│   ├── vite.config.js            # Vite build configuration with /api proxy
-│   ├── tailwind.config.js        # Tailwind styling & animations
-│   ├── postcss.config.js         # PostCSS configuration
-│   ├── index.html                # Main entry HTML
-│   └── src/
-│       ├── main.jsx              # React DOM entry
-│       ├── index.css             # Tailwind base & custom globe styles
-│       ├── App.jsx               # Game orchestrator, score & feedback state
-│       └── components/
-│           ├── GlobeQuiz.jsx     # 3D Globe with GeoJSON polygons & feedback colors
-│           ├── QuestionCard.jsx  # Floating question panel, flag clue & feedback banners
-│           └── ScoreBoard.jsx    # Live score, streak & solved tracker
-└── README.md
-```
+The project is structured with a root `package.json` and `render.yaml` so the entire full-stack app builds and deploys to a single public HTTPS URL with one command.
+
+### Option A: Free Permanent Hosting on Render.com (Recommended)
+
+1. **Create a GitHub Repository**:
+   - Create a new public repository on [GitHub](https://github.com/new) (e.g. `lokamly-globe-quiz`).
+   - Push this project to your repository:
+     ```bash
+     git remote add origin https://github.com/YOUR_USERNAME/lokamly-globe-quiz.git
+     git branch -M main
+     git push -u origin main
+     ```
+
+2. **Deploy on Render**:
+   - Sign up / log in to [Render.com](https://render.com).
+   - Click **New +** -> **Web Service**.
+   - Connect your GitHub repository.
+   - Render automatically detects the configuration, or set:
+     - **Build Command**: `npm run build`
+     - **Start Command**: `npm start`
+     - **Plan**: Free
+   - Click **Deploy Web Service**!
+   - Your game will be live globally at `https://lokamly-globe-quiz.onrender.com`!
 
 ---
 
-## 🚀 Quick Setup & Run Instructions
+### Option B: Free Permanent Hosting on Railway.app
+
+1. Go to [Railway.app](https://railway.app).
+2. Click **New Project** -> **Deploy from GitHub repo**.
+3. Select your repository. Railway automatically detects `package.json`, runs `npm run build`, and starts the server with zero configuration!
+4. Go to **Settings** -> **Generate Domain** to get your public HTTPS URL.
+
+---
+
+### Option C: Instant Live Public Link Right Now (Localtunnel)
+
+If your local server is running on port 5000, you can instantly expose it to anyone on the internet without deploying:
+
+```bash
+npx localtunnel --port 5000
+```
+
+1. Open the generated URL (e.g., `https://xxxx.loca.lt`).
+2. When prompted for the "Tunnel Password / Endpoint IP", enter your machine's public IP: `152.58.216.6`.
+3. Anyone in the world can now interact with your 3D globe game in real time!
+
+---
+
+## 💻 Local Development
 
 ### 1. Prerequisites
 Ensure you have **Node.js** (v18+) and **npm** installed.
-Verify via:
+
+### 2. Start Both Services
 ```bash
-node -v
-npm -v
-```
-
----
-
-### 2. Backend Setup (Node.js & Express)
-
-Open a terminal and start the backend:
-
-```bash
+# Terminal 1: Backend
 cd backend
-npm install
 npm start
-```
 
-The Express server will start on:
-👉 **`http://localhost:5000`**
-
-Test the quiz endpoint:
-- Quiz Question: `http://localhost:5000/api/quiz/random`
-- Health check: `http://localhost:5000/api/health`
-
----
-
-### 3. Frontend Setup (React + Vite + Tailwind CSS)
-
-Open a **separate** terminal window and start the frontend:
-
-```bash
+# Terminal 2: Frontend
 cd frontend
-npm install
 npm run dev
 ```
 
-The frontend development server will launch at:
-👉 **`http://localhost:5173`**
-
-Open `http://localhost:5173` in any modern web browser to play the quiz game!
-
----
-
-## 🛠 API Specification
-
-### `GET /api/quiz/random`
-Returns a random question object:
-```json
-{
-  "id": "quiz-1",
-  "question": "Which Middle Eastern country is home to the ancient rock-cut archaeological city of Petra, one of the New Seven Wonders of the World?",
-  "targetCountryName": "Jordan",
-  "targetCountryCode": "JO",
-  "iso3": "JOR",
-  "flagUrl": "https://flagcdn.com/w160/jo.png",
-  "funFact": "Petra's iconic Treasury was carved directly into pink sandstone cliffs over 2,000 years ago by the Nabataeans."
-}
-```
+- **Frontend App**: [http://localhost:5173](http://localhost:5173)
+- **Backend API**: [http://localhost:5000](http://localhost:5000)
